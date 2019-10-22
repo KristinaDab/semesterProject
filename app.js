@@ -16,10 +16,13 @@ db.connection(function(){
 });
 
 
+
 var indexRouter = require('./routes/index');
 var homeRouter = require('./routes/home');
 var recipesRouter = require('./routes/recipes');
 var myRecipesRouter = require('./routes/myrecipes');
+var createRecipeRouter = require('./routes/createRecipe');
+var updateRecipeRouter = require('./routes/updateRecipe');
 
 var app = express();
 
@@ -40,7 +43,12 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-function restrict(req, res, next) {
+app.use(function(req, res, next) {
+  res.locals.username = req.session.username;
+  next();
+});
+
+function restrictAccess(req, res, next) {
   if (req.session.username) {
     next();
   } else {
@@ -60,9 +68,11 @@ app.get('/url', function (req, res) {
 });
 
 app.use('/', indexRouter);
-app.use('/home', restrict, homeRouter);
-app.use('/recipes', restrict, recipesRouter);
-app.use('/myrecipes', restrict, myRecipesRouter);
+app.use('/home', restrictAccess, homeRouter);
+app.use('/recipes',  recipesRouter);
+app.use('/myrecipes', restrictAccess, myRecipesRouter);
+app.use('/createRecipe', restrictAccess, createRecipeRouter);
+app.use('/updateRecipe', restrictAccess, updateRecipeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

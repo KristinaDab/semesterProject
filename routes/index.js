@@ -23,6 +23,7 @@ router.post('/', function(req, res, next) {
 		});
 });
 
+
 /* GET logout from the session */
 router.get('/logout', function(req, res, next) {
   if (req.session) {
@@ -36,5 +37,7 @@ router.get('/logout', function(req, res, next) {
     });
   }
 });
+
+
 
 module.exports = router;

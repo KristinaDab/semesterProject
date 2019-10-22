@@ -7,9 +7,35 @@
 <body>
 	<%- include('menu', {active: "myrecipes"}); %>
 	
-	<div class="main">
+<div class="main">
 		<h1><%= title %></h1>
 		<p>Welcome to <%= title %>, <%= user %></p>
+
+		<ul>
+			<%allrecipes.forEach(function (recipe) { %>
+			 <% if(recipe.cook_username === username) {%>
+			<br>
+ 			<h2><%=recipe.title%></h2>
+			<p>Created by: <%=recipe.cook_username%></p>
+			<p>Category: <%=recipe.category_name%></p>
+			<p>Yield: <%=recipe.yield%></p>
+			<p>Ingredients:</p> 
+ 			<ul> 
+					<%ingredients.forEach(function (ingr) { %>
+					<% if(recipe.recipe_id === ingr.recipe_id) {%>
+					<li><%=ingr.ingredient_name%><%=ingr.quantity%> <%=ingr.unit_code%></li>
+					<br>
+					<%}%>
+					<% });%>
+			
+			</ul> 
+			<p>Directions: </p>
+ 			<p style="white-space: pre-line"><%=recipe.instructions%></p>  
+			<br>
+			<%}%>
+			<% });%>
+		</ul>
+
 	</div>
 
 </body>
