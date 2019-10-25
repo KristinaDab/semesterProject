@@ -7,6 +7,10 @@ a {
   color: #00B7FF;
 }
 
+p {
+  white-space: pre-line;
+}
+
 .main {
 	margin-top: 50px;
 }
@@ -100,7 +104,7 @@ li.dropdown {
   margin-bottom: 15px;
   box-sizing:border-box;
 }
-.login-form input[type="submit"] {
+.login-form button[type="submit"] {
   width: 100%;
   padding: 15px;
   background-color: #535b63;
@@ -110,3 +114,30 @@ li.dropdown {
   font-weight: bold;
   color: #ffffff;
 }
+
+/*Styling Create Recipe form*/
+
+.createRecipe-form {
+  width: 400px;
+  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.createRecipe-form input[type="text"], select {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #dddddd;
+  margin-bottom: 15px;
+  box-sizing:border-box;
+}
+
+.createRecipe-form button[type="submit"] {
+  width: 100%;
+  padding: 15px;
+  background-color: #535b63;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+}
+

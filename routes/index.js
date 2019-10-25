@@ -11,16 +11,16 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
-		db.get().query('SELECT * FROM cook WHERE cook_username = ? AND password = ?', [username, password], function(error, results, fields) {
-			if (results.length > 0) {
-				req.session.loggedin = true;
-				req.session.username = username;
-				res.redirect('/home');
-			} else {
-				res.status(400).json('Incorrect Username and/or Password!');
-			}			
-			res.end();
-		});
+  db.get().query('SELECT * FROM cook WHERE cook_username = ? AND password = ?', [username, password], function(error, results, fields) {
+   if (results.length > 0) {
+    req.session.loggedin = true;
+    req.session.username = username;
+    res.redirect('/home');
+  } else {
+    res.status(400).json('Incorrect Username and/or Password!');
+  }			
+  res.end();
+});
 });
 
 

@@ -11,6 +11,32 @@
 		<h1><%= title %></h1>
 		<p></p>
 	</div>
-	
+	<div class="createRecipe-form">
+	<form name="createR" method="post" action="/createrecipe">
+		Recipe title: <input id="inputtitle" type="text" name="title" placeholder="Recipe title" required> 
+
+		Category: 
+		<select id="listcategory" required>
+			<option value="desserts">Desserts</option>
+			<option value="maincourses">Main Courses</option>
+			<option value="soupsandstews">Soups And Stews</option>
+			<option value="starters">Starters</option>
+			<option value="drinks">Drinks</option>
+			<option value="salads">Salads</option>
+			<option value="dressings">Dressings</option>
+			<option value="snacks">Snacks</option>
+			<option value="sauces">Sauces</option>
+		</select>
+
+		
+		Yield: <input id="inputyield" type="text" name="yield" placeholder="Yield" required>
+
+		Ingredients: <input id="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required>
+
+		Directions: <textarea rows="20" cols="54" id="inputdirections" type="text" name="directions" placeholder="Directions" required> </textarea>
+
+		<button id="btnCreate" type="submit">Create Recipe</button>
+	</form>
+	</div>
 </body>
 </html>

@@ -69,7 +69,7 @@ app.get('/url', function (req, res) {
 
 app.use('/', indexRouter);
 app.use('/home', restrictAccess, homeRouter);
-app.use('/recipes',  recipesRouter);
+app.use('/recipes', restrictAccess, recipesRouter);
 app.use('/myrecipes', restrictAccess, myRecipesRouter);
 app.use('/createRecipe', restrictAccess, createRecipeRouter);
 app.use('/updateRecipe', restrictAccess, updateRecipeRouter);

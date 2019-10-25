@@ -14,22 +14,22 @@
 		<ul>
 			<%allrecipes.forEach(function (recipe) { %>
 			<br>
- 			<h2><%=recipe.title%></h2>
+			<h2><%=recipe.title%></h2>
 			<p>Created by: <%=recipe.cook_username%></p>
 			<p>Category: <%=recipe.category_name%></p>
 			<p>Yield: <%=recipe.yield%></p>
 			<p>Ingredients:</p> 
- 			<ul> 
-					<%ingredients.forEach(function (ingr) { %>
-					<% if(recipe.recipe_id === ingr.recipe_id) {%>
-					<li><%=ingr.ingredient_name%><%=ingr.quantity%> <%=ingr.unit_code%></li>
-					<br>
-					<%}%>
-					<% });%>
-			
+			<ul> 
+				<%ingredients.forEach(function (ingr) { %>
+				<% if(recipe.recipe_id === ingr.recipe_id) {%>
+				<li><%=ingr.ingredient_name%><%=ingr.quantity%> <%=ingr.unit_code%></li>
+				<br>
+				<%}%>
+				<% });%>
+
 			</ul> 
 			<p>Directions:</p>
- 			<p style="white-space: pre-wrap"><%=recipe.instructions%></p>  
+			<p><%=recipe.instructions%></p>  
 			<br>
 			<% });%>
 		</ul>
