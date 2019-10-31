@@ -3,41 +3,7 @@
 <head>
 	<title><%= title %></title>
 	<link rel='stylesheet' href='/stylesheets/style.css' />
-
-	<script type="text/javascript">
-
-		var counter = 1;
-
-		var newIngr;
-
-		function addIngr(divName){
-
-			counter++;
-
-			var newdiv = document.createElement('div');
-
-			newdiv.id = counter;
-
-			var deleteLink = '<a style="text-align:right;  margin-right:50px; background-color: orange; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:delIt('+ counter +')">Delete</a>';
-
-			newdiv.innerHTML = counter + ' <input id="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required> Quantity: <input id="inputquantity" type="text" name="quantity" placeholder="Quantity" required>Unit: <select id="listunit" required> <option value="grams">g</option> <option value="liters">l</option> <option value="milliliters">ml</option> <option value="pieces">pcs</option> <option value="tablespoons">tbsp</option> <option value="teaspoons">tsp</option> <option value="cups">cup</option> </select> ' + deleteLink;
-
-			document.getElementById(divName).appendChild(newdiv);
-
-			newIngr = divName;
-
-		}
-
-		function delIt(eleId) {
-
-			d= document;
-			var ele = d.getElementById(eleId);
-			var parentEle = d.getElementById(newIngr);
-			parentEle.removeChild(ele);
-		}
-
-	</script>
-
+	
 </head>
 <body>
 	<%- include('menu', {active: "createrecipe"}); %>
@@ -71,14 +37,15 @@
 
 			
 			<p>Ingredients:</p> <br>
+
 			<div id="addNewIngredients">
 
 				<input id="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required>
 
-				Quantity: 
+				&nbsp Quantity: &nbsp
 				<input id="inputquantity" type="text" name="quantity" placeholder="Quantity" required>
 
-				Unit: 
+				&nbsp Unit: &nbsp
 				<select id="listunit" required>
 					<option value="grams">g</option>
 					<option value="liters">l</option>
@@ -91,7 +58,7 @@
 
 			</div>
 
-			<input type="button" id="addnewfield" value="Add another ingredient" onClick="addIngr('addNewIngredients');">
+			<input type="button" id="addnewfield" value="Add another ingredient" onClick="addIngrFields('addNewIngredients');">
 			<br>
 
 			<p>Directions:</p> 
@@ -100,6 +67,8 @@
 			<button id="btnCreate" type="submit">Create Recipe</button>
 		</form>
 	</div>
+
+	<script src="/javascripts/createR.js" type="text/javascript"> </script>
 
 </body>
 </html>
