@@ -117,12 +117,37 @@ li.dropdown {
 
 /*Styling Create Recipe form*/
 
+#inputingredient {
+  width: 300px;
+}
+
+#inputquantity {
+  width: 110px;
+}
+
+#listunit {
+  width: 100px;
+}
+
+#addnewfield {
+
+  width: 30%;
+  padding: 8px;
+  background-color: grey;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: #ffffff;
+
+}
+
+
 .createRecipe-form {
-  width: 400px;
+  width: 800px;
   font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-.createRecipe-form input[type="text"], select {
+.createRecipe-form input[type="text"], select, textarea {
   width: 100%;
   padding: 15px;
   border: 1px solid #dddddd;

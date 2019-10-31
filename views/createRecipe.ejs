@@ -3,6 +3,41 @@
 <head>
 	<title><%= title %></title>
 	<link rel='stylesheet' href='/stylesheets/style.css' />
+
+	<script type="text/javascript">
+
+		var counter = 1;
+
+		var newIngr;
+
+		function addIngr(divName){
+
+			counter++;
+
+			var newdiv = document.createElement('div');
+
+			newdiv.id = counter;
+
+			var delLink = '<a style="text-align:right;  margin-right:50px; background-color: orange; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:delIt('+ counter +')">Delete</a>';
+
+			newdiv.innerHTML = counter + ' <input id="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required> Quantity: <input id="inputquantity" type="text" name="quantity" placeholder="Quantity" required>Unit: <select id="listunit" required> <option value="grams">g</option> <option value="liters">l</option> <option value="milliliters">ml</option> <option value="pieces">pcs</option> <option value="tablespoons">tbsp</option> <option value="teaspoons">tsp</option> <option value="cups">cup</option> </select> ' + delLink;
+
+			document.getElementById(divName).appendChild(newdiv);
+
+			newIngr = divName;
+
+		}
+
+		function delIt(eleId) {
+
+			d= document;
+			var ele = d.getElementById(eleId);
+			var parentEle = d.getElementById(newIngr);
+			parentEle.removeChild(ele);
+		}
+
+	</script>
+
 </head>
 <body>
 	<%- include('menu', {active: "createrecipe"}); %>
@@ -11,32 +46,60 @@
 		<h1><%= title %></h1>
 		<p></p>
 	</div>
+
 	<div class="createRecipe-form">
-	<form name="createR" method="post" action="/createrecipe">
-		Recipe title: <input id="inputtitle" type="text" name="title" placeholder="Recipe title" required> 
+		<form name="createR" method="post" action="/createrecipe">
 
-		Category: 
-		<select id="listcategory" required>
-			<option value="desserts">Desserts</option>
-			<option value="maincourses">Main Courses</option>
-			<option value="soupsandstews">Soups And Stews</option>
-			<option value="starters">Starters</option>
-			<option value="drinks">Drinks</option>
-			<option value="salads">Salads</option>
-			<option value="dressings">Dressings</option>
-			<option value="snacks">Snacks</option>
-			<option value="sauces">Sauces</option>
-		</select>
+			<p>Recipe title: </p>
+			<input id="inputtitle" type="text" name="title" placeholder="Recipe title" required> 
 
-		
-		Yield: <input id="inputyield" type="text" name="yield" placeholder="Yield" required>
+			<p>Category: </p>
+			<select id="listcategory" required>
+				<option value="desserts">Desserts</option>
+				<option value="maincourses">Main Courses</option>
+				<option value="soupsandstews">Soups And Stews</option>
+				<option value="starters">Starters</option>
+				<option value="drinks">Drinks</option>
+				<option value="salads">Salads</option>
+				<option value="dressings">Dressings</option>
+				<option value="snacks">Snacks</option>
+				<option value="sauces">Sauces</option>
+			</select>
 
-		Ingredients: <input id="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required>
+			<p>Yield:</p> 
+			<input id="inputyield" type="text" name="yield" placeholder="Yield" required>
 
-		Directions: <textarea rows="20" cols="54" id="inputdirections" type="text" name="directions" placeholder="Directions" required> </textarea>
+			
+			<p>Ingredients:</p> <br>
+			<div id="addNewIngredients">
 
-		<button id="btnCreate" type="submit">Create Recipe</button>
-	</form>
+				<input id="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required>
+
+				Quantity: 
+				<input id="inputquantity" type="text" name="quantity" placeholder="Quantity" required>
+
+				Unit: 
+				<select id="listunit" required>
+					<option value="grams">g</option>
+					<option value="liters">l</option>
+					<option value="milliliters">ml</option>
+					<option value="pieces">pcs</option>
+					<option value="tablespoons">tbsp</option>
+					<option value="teaspoons">tsp</option>
+					<option value="cups">cup</option>
+				</select>
+
+			</div>
+
+			<input type="button" id="addnewfield" value="Add another ingredient" onClick="addIngr('addNewIngredients');">
+			<br>
+
+			<p>Directions:</p> 
+			<textarea rows="20" cols="54" id="inputdirections" type="text" name="directions" placeholder="Directions" required> </textarea>
+
+			<button id="btnCreate" type="submit">Create Recipe</button>
+		</form>
 	</div>
+
 </body>
 </html>
