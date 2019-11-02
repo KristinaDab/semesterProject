@@ -36,6 +36,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(bodyParser.urlencoded({extended: true})); 
+app.use(bodyParser.json());
+
 // Adding code for the session
 app.use(session({
 	secret: 'secret',
@@ -71,7 +74,7 @@ app.use('/', indexRouter);
 app.use('/home', restrictAccess, homeRouter);
 app.use('/recipes', restrictAccess, recipesRouter);
 app.use('/myrecipes', restrictAccess, myRecipesRouter);
-app.use('/createRecipe', restrictAccess, createRecipeRouter);
+app.use('/createRecipe', createRecipeRouter);
 app.use('/updateRecipe', restrictAccess, updateRecipeRouter);
 
 // catch 404 and forward to error handler
