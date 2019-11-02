@@ -117,15 +117,15 @@ li.dropdown {
 
 /*Styling Create Recipe form*/
 
-#inputingredient {
-  width: 300px;
+.inputingredient {
+  width: 300px !important;
 }
 
-#inputquantity {
-  width: 110px;
+.inputquantity {
+  width: 110px !important;
 }
 
-#listunit {
+.listunit {
   width: 100px;
 }
 
