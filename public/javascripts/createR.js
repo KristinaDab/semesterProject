@@ -1,29 +1,48 @@
-		var counter = 1;
+		
+let counter = 1;
 
-		var newIngr;
+// let limit = 20;
 
-		function addIngrFields(divName){
 
-			counter++;
+// add another ingredient field 
 
-			var newdiv = document.createElement('div');
+function addIngrFields(){
 
-			newdiv.id = counter;
+	counter++;
 
-			var deleteLink = '<a style="text-align:right; margin-right:50px; background-color: orange; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:delIt('+ counter +')">Delete</a>';
+	let newdiv = document.createElement('div');
 
-			newdiv.innerHTML = '<input id="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required> &nbsp Quantity: &nbsp <input id="inputquantity" type="text" name="quantity" placeholder="Quantity" required> &nbsp Unit: &nbsp <select id="listunit" required> <option value="grams">g</option> <option value="liters">l</option> <option value="milliliters">ml</option> <option value="pieces">pcs</option> <option value="tablespoons">tbsp</option> <option value="teaspoons">tsp</option> <option value="cups">cup</option> </select> ' + '&nbsp &nbsp'+ deleteLink;
+	newdiv.id = counter;
 
-			document.getElementById(divName).appendChild(newdiv);
+	let deleteBtn = '<a style="text-align:right; margin-right:50px; background-color: orange; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:deleteFields('+ counter +')">Delete</a>';
 
-			newIngr = divName;
+	newdiv.innerHTML = document.getElementById('addIngrTemplate').innerHTML + deleteBtn;
 
-		}
 
-		function delIt(eleId) {
+	//give new names to the new ingredient fields 
 
-			d= document;
-			var ele = d.getElementById(eleId);
-			var parentEle = d.getElementById(newIngr);
-			parentEle.removeChild(ele);
-		}
+	divChildren = newdiv.childNodes;
+
+	for (var i=0; i < divChildren.length; i++) {
+
+		divChildren[i].name = divChildren[i].name + counter; 
+	}
+
+
+	//add new ingredient fields (newdiv) to the 'addNewIngredients' div
+
+	document.getElementById('addNewIngredients').appendChild(newdiv);
+
+
+}
+
+
+// delete fields 
+
+function deleteFields(eleId) {
+
+	d = document;
+	let ele = d.getElementById(eleId);
+	let parentEle = d.getElementById('addNewIngredients');
+	parentEle.removeChild(ele);
+}
