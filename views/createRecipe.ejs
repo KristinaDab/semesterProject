@@ -37,28 +37,12 @@
 			
 			<p>Ingredients:</p> <br>
 
-			<div id="addNewIngredients" name="addingr" >
+			<div id="addNewIngredients" >
 
-				<div id="1">
-					<input class="inputingredient" type="text" name="ingredient" placeholder="Ingredient" required>
-
-					&nbsp Quantity: &nbsp
-					<input class="inputquantity" type="text" name="quantity" placeholder="Quantity" required>
-
-					&nbsp Unit: &nbsp
-					<select class="listunit" name="listunit" required>
-
-						<!-- Get ingredient_unit data from database and add it to options  -->
-
-						<%units.forEach(function (unit) { %>
-						<option value=<%=unit.unit_code%>><%=unit.unit_code%></option>
-						<% });%>
-
-					</select>
-				</div>
+				<!-- Here dynamically will be added ingredients after pressing a below button -->
 			</div>
 
-			<input type="button" id="addnewfield" value="Add another ingredient" onClick="addIngrFields();">
+			<input type="button" id="addnewfield" value="Add ingredient" onClick="addIngrFields();">
 			<br>
 
 			<p>Directions:</p> 
@@ -70,9 +54,20 @@
 
 	<!-- Template for adding ingredients -->
 
-	<div id="addIngrTemplate" name="addingr1" style="display: none">
+	<div id="addIngrTemplate" style="display: none">
 
-		<input class="inputingredient" type="text" name="ingredient"  placeholder="Ingredient" required>
+		<select class="listingredient" name="listingredient" required>
+
+			<!-- Get ingredients data from database and add it to options  -->
+
+			<option value="">Select...
+
+			<%ingredients.forEach(function (ingr) { %>
+
+			<option value="<%=ingr.ingredient_name%>"><%=ingr.ingredient_name%></option>
+			<% });%>
+
+		</select>
 
 		&nbsp Quantity: &nbsp
 		<input class="inputquantity" type="text" name="quantity" placeholder="Quantity" required>
@@ -83,7 +78,7 @@
 			<!-- Get ingredient_unit data from database and add it to options  -->
 
 			<%units.forEach(function (unit) { %>
-			<option value=<%=unit.unit_code%>><%=unit.unit_code%></option>
+			<option value="<%=unit.unit_code%>"><%=unit.unit_code%></option>
 			<% });%>
 
 		</select>
