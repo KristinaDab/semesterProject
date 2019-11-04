@@ -9,13 +9,11 @@ var bodyParser = require('body-parser');
 // 	res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe'});
 // });
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-var jsonParser = bodyParser.json()
-
 var query = 'SELECT * FROM category';
 
 var query1 = 'SELECT * FROM ingredient_unit';
+
+var query2 = 'SELECT * FROM ingredient';
 
 
 // Get categories and units data from database to the page
@@ -26,9 +24,12 @@ router.get('/', (req, res, next) => {
 
 		db.get().query(query1, (error, units, fields) => {
 
-			// console.log(units);
+			db.get().query(query2, (error, ingredients, fields) => {
 
-			res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe', categories: categories, units: units});	
+				// console.log(units);
+				res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe', categories: categories, units: units, ingredients: ingredients});	
+
+			});
 
 		});
 
@@ -37,44 +38,52 @@ router.get('/', (req, res, next) => {
 
 
 router.post('/', function(req, res, next) {
+
 	var title = req.body.title;
 	var category = req.body.listcategory;
 	var amount = req.body.yield;
+	var directions = req.body.directions;
 
-	
-	const keys = Object.entries(req.body);
+	const keys = Object.keys(req.body);
 
-	// console.log(keys);
+	var count = 0;
 
-	for (const [key, value] of keys) {
-		console.log(key, value);
+	for (const value in keys) {
+
+		count = count + 1;
+
+		var ingredient = req.body['listingredient' + count];
+		var quantity =  req.body['quantity' + count];
+		var unit = req.body['listunit' + count];
+		
+		if (ingredient === undefined) {
+			continue;
+		}
+
+		console.log(ingredient, quantity, unit, value);
 	}
 
-// 	for (var i = 0; i < numofoptions; i++){
 
-// 		var optcount = i + 1;
 
-// 		var ingr = req.body['ingredient' + optcount];
-// 		var quant =  req.body['quantity' + optcount];
-// 		var uni = req.body['listunit' + optcount];
-//     // This prints req.body.optiondes1 as string, but I need the value of req.body.optiondes1
-//     console.log(ingr, quant, uni); 
+	
+
+// This does just the same as the method above
+
+
+
+// for (var i = 1; i < keys.length; i++){
+
+// 	var ingredient = req.body['listingredient' + i];
+// 	var quantity =  req.body['quantity' + i];
+// 	var unit = req.body['listunit' + i];
+
+		// if (ingredient === undefined) {
+		// 	continue;
+		// }
+
+// 	console.log(ingredient, quantity, unit);
+
 // };
-
-
-var directions = req.body.directions;
-
-// console.log(numofoptions); 
-
-
-// var ingredient = req.body.ingredient;
-
-// var quantity = req.body.quantity;
-
-// var unit = req.body.listunit;
-
-
-
 
 
 // console.log(ingredient, quantity, unit);
