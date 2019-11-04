@@ -1,5 +1,5 @@
 		
-let counter = 1;
+let counter = 0;
 
 // let limit = 20;
 
@@ -46,3 +46,4 @@ function deleteFields(eleId) {
 	let parentEle = d.getElementById('addNewIngredients');
 	parentEle.removeChild(ele);
 }
+
