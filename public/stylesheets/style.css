@@ -31,6 +31,7 @@ p {
 li {
 
   float: left;
+  
 }
 
 li a, .dropbtn {
@@ -117,7 +118,7 @@ li.dropdown {
 
 /*Styling Create Recipe form*/
 
-.inputingredient {
+.listingredient {
   width: 300px !important;
 }
 
