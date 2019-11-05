@@ -74,7 +74,7 @@ app.use('/', indexRouter);
 app.use('/home', restrictAccess, homeRouter);
 app.use('/recipes', restrictAccess, recipesRouter);
 app.use('/myrecipes', restrictAccess, myRecipesRouter);
-app.use('/createRecipe', createRecipeRouter);
+app.use('/createRecipe', restrictAccess, createRecipeRouter);
 app.use('/updateRecipe', restrictAccess, updateRecipeRouter);
 
 // catch 404 and forward to error handler
