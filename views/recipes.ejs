@@ -12,24 +12,42 @@
 		<p>Welcome to <%= title %>, <%= user %></p>
 
 		<ul>
+			<!-- Loop through all the recipes from database and display them as follow -->
+
 			<%allrecipes.forEach(function (recipe) { %>
 			<br>
+
 			<h2><%=recipe.title%></h2>
+
 			<p>Created by: <%=recipe.cook_username%></p>
+
 			<p>Category: <%=recipe.category_name%></p>
+
 			<p>Yield: <%=recipe.yield%></p>
+
 			<p>Ingredients:</p> 
-			<ul> 
+
+			<ul>
+
+				<!-- Loop through all the ingredients that belong to the recipe and display them as follow -->
+
 				<%ingredients.forEach(function (ingr) { %>
+
 				<% if(recipe.recipe_id === ingr.recipe_id) {%>
-				<li><%=ingr.ingredient_name%><%=ingr.quantity%> <%=ingr.unit_code%></li>
+
+				<li><%=ingr.ingredient_name%> <%=ingr.quantity%> <%=ingr.unit_code%></li>
+
 				<br>
+
 				<%}%>
 				<% });%>
 
 			</ul> 
+
 			<p>Directions:</p>
+
 			<p><%=recipe.instructions%></p>  
+			
 			<br>
 			<% });%>
 		</ul>
