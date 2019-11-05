@@ -19,7 +19,7 @@ function addIngrFields(){
 	newdiv.innerHTML = document.getElementById('addIngrTemplate').innerHTML + deleteBtn;
 
 
-	//give new names to the new ingredient fields 
+	//give new names to new ingredient fields 
 
 	divChildren = newdiv.childNodes;
 
@@ -32,8 +32,6 @@ function addIngrFields(){
 	//add new ingredient fields (newdiv) to the 'addNewIngredients' div
 
 	document.getElementById('addNewIngredients').appendChild(newdiv);
-
-
 }
 
 
