@@ -4,19 +4,21 @@ var db = require('../db');
 var bodyParser = require('body-parser');
 
 
-// /* GET create recipe page. */
-// router.get('/', function(req, res, next) {
-// 	res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe'});
-// });
+// Create variables with separate query strings
 
-var query = 'SELECT * FROM category';
+var query = 'SELECT * FROM category ORDER BY category_name';
 
-var query1 = 'SELECT * FROM ingredient_unit';
+var query1 = 'SELECT * FROM ingredient_unit ORDER BY unit_code';
 
-var query2 = 'SELECT * FROM ingredient';
+var query2 = 'SELECT * FROM ingredient ORDER BY ingredient_name';
 
 
-// Get categories and units data from database to the page
+var query3 = 'INSERT INTO recipe (title, yield, instructions, category_id, cook_username) VALUES (?,?,?, (SELECT category_id FROM category WHERE category_name = ?), (SELECT cook_username FROM cook WHERE cook_username = ?))';
+
+var query4 = 'INSERT INTO recipe_ingredient (recipe_id, ingredient_id, quantity, unit_code) VALUES ((SELECT recipe_id FROM recipe WHERE title = ?), (SELECT ingredient_id FROM ingredient WHERE ingredient_name = ?), ? , (SELECT unit_code FROM ingredient_unit WHERE unit_code = ?))';
+
+
+// GET categories, ingredients and units data from database to the page
 
 router.get('/', (req, res, next) => {
 
@@ -27,7 +29,7 @@ router.get('/', (req, res, next) => {
 			db.get().query(query2, (error, ingredients, fields) => {
 
 				// console.log(units);
-				res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe', categories: categories, units: units, ingredients: ingredients});	
+				res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe', user: req.session.username, categories: categories, units: units, ingredients: ingredients});	
 
 			});
 
@@ -36,68 +38,78 @@ router.get('/', (req, res, next) => {
 	});
 });
 
+// POST a recipe form data to the database 
 
 router.post('/', function(req, res, next) {
 
+	// Create variables for input results from the new-recipe form 
+
 	var title = req.body.title;
-	var category = req.body.listcategory;
 	var amount = req.body.yield;
 	var directions = req.body.directions;
+	var category = req.body.listcategory;
+	var user = req.session.username;
 
-	const keys = Object.keys(req.body);
+	// Assign new-recipe form input resuts to the query string
 
-	var count = 0;
-
-	for (const value in keys) {
-
-		count = count + 1;
-
-		var ingredient = req.body['listingredient' + count];
-		var quantity =  req.body['quantity' + count];
-		var unit = req.body['listunit' + count];
+	db.get().query(query3,[title, amount, directions, category, user], (error, newRecipe, fields) => {
 		
-		if (ingredient === undefined) {
-			continue;
+		// If something goes wrong, we write an error to the console
+
+		if(error) {
+			console.log(error);
 		}
 
-		console.log(ingredient, quantity, unit, value);
-	}
+		// Create varible which gets all the elements from the new-recipe form
 
+		const keys = Object.keys(req.body);
 
+		// Set a counter which keeps track of how many there are dynamic input field names
+		// that start with listingredient, quantity and listunit. 
 
-	
+		var count = 0;
 
-// This does just the same as the method above
+		// Loop through the form keys to find all dynamically added input fields
 
+		for (const value in keys) {
 
+			// We start counting from 1, because dynamic fields names start with 1 
 
-// for (var i = 1; i < keys.length; i++){
+			count = count + 1;
 
-// 	var ingredient = req.body['listingredient' + i];
-// 	var quantity =  req.body['quantity' + i];
-// 	var unit = req.body['listunit' + i];
+			// Now to each dynamic field name that starts with listingredient, quantity and listunit we add a count 
+			// that's how we find names that exist
 
-		// if (ingredient === undefined) {
-		// 	continue;
-		// }
+			var ingredient = req.body['listingredient' + count];
+			var quantity =  req.body['quantity' + count];
+			var unit = req.body['listunit' + count];
 
-// 	console.log(ingredient, quantity, unit);
+			// Skip values that are undefined 
 
-// };
+			if (ingredient === undefined) {
+				continue;
+			}
 
+			// Assign dynamic fields to query string 
 
-// console.log(ingredient, quantity, unit);
+			db.get().query(query4, [title, ingredient, quantity, unit], (error, newIngredient, fields) => {
 
-  // db.get().query('SELECT * FROM cook WHERE cook_username = ? AND password = ?', [username, password], function(error, results, fields) {
-  //  if (results.length > 0) {
-  //   req.session.loggedin = true;
-  //   req.session.username = username;
-  //   res.redirect('/home');
-  // } else {
-  //   res.status(400).json('Incorrect Username and/or Password!');
-  // }			
-  // res.end();
-// });
+				// Catch errors if any 
+
+				if(error) {
+					console.log(error);
+				}
+
+			});
+
+		};
+		// Redirect to the recipes page
+		res.redirect('/recipes');
+
+		  // End the connection to the database
+		  res.end();
+	});
+
 });
 
 
