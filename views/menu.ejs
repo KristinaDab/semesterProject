@@ -5,12 +5,6 @@
 	<link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
-<!-- 	<ul>
-		<li><a <%if(id=="home"){%>class="active"<%}%> href="/home">Home</a></li>
-		<li><a <%if(id=="recipes"){%>class="active"<%}%> href="/recipes">Recipes</a></li>
-		<li><a <%if(id=="myrecipes"){%>class="active"<%}%> href="/myrecipes">My Recipes</a></li>
-		<li id="logout"><a href="/logout">Log out</a></li>
-	</ul> -->
 
 	<ul id="menu-ul">
 		<li><a <%if(id=="home"){%>class="active"<%}%> href="/home">Home</a></li>
@@ -19,13 +13,14 @@
 			<a <%if(id=="recipes" || id=="createrecipe"){%>class="active"<%}%> href="/recipes" class="dropbtn">Recipes</a>
 			<div class="dropdown-content">
 				<a href="/createrecipe">Create A Recipe</a>
-<!-- 				<a href="/updaterecipe">Update A Recipe</a> -->
 			</div>
 		</li>
 
 		<li><a <%if(id=="myrecipes"){%>class="active"<%}%> href="/myrecipes">My Recipes</a></li>
+		
+		<li id="logout"><%=user%><a href="/logout"> Log out</a></li>
+	
 
-		<li id="logout"><a href="/logout">Log out</a></li>
 	</ul>
 
 </body>
