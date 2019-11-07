@@ -9,49 +9,62 @@
 
 	<div class="main">
 		<h1><%= title %></h1>
-		<p>Welcome to <%= title %>, <%= user %></p>
 
-		<ul>
+		<div id="allrecipes">
+
 			<!-- Loop through all the recipes from database and display them as follow -->
 
 			<%allrecipes.forEach(function (recipe) { %>
 			<br>
 
-			<h2><%=recipe.title%></h2>
+			<button type="button" class="collapsible"><%=recipe.title%></button>
 
-			<p>Created by: <%=recipe.cook_username%></p>
+			<div class="content">
 
-			<p>Category: <%=recipe.category_name%></p>
+				<h2><%=recipe.title%></h2>
 
-			<p>Yield: <%=recipe.yield%></p>
+				<p>Created by: <%=recipe.cook_username%></p>
 
-			<p>Ingredients:</p> 
+				<p>Category: <%=recipe.category_name%></p>
 
-			<ul>
+				<p>Yield: <%=recipe.yield%></p>
 
-				<!-- Loop through all the ingredients that belong to the recipe and display them as follow -->
+				<p>Ingredients:</p> 
 
-				<%ingredients.forEach(function (ingr) { %>
+				<ul>
 
-				<% if(recipe.recipe_id === ingr.recipe_id) {%>
+					<!-- Loop through all the ingredients that belong to the recipe and display them as follow -->
 
-				<li><%=ingr.ingredient_name%> <%=ingr.quantity%> <%=ingr.unit_code%></li>
+					<%ingredients.forEach(function (ingr) { %>
+
+					<% if(recipe.recipe_id === ingr.recipe_id) {%>
+
+					<li><%=ingr.ingredient_name%> <%=ingr.quantity%> <%=ingr.unit_code%></li>
+
+					<br>
+
+					<%}%>
+					<% });%>
+
+				</ul> 
+
+				<p>Directions:</p>
+
+				<p><%=recipe.instructions%></p>  
 
 				<br>
 
-				<%}%>
-				<% });%>
+			</div>
 
-			</ul> 
-
-			<p>Directions:</p>
-
-			<p><%=recipe.instructions%></p>  
-			
 			<br>
+
 			<% });%>
-		</ul>
+		</div>
 
 	</div>
+	
+	<!-- Script for the collapsible button -->
+	<script src="/javascripts/recipes-public.js" type="text/javascript"></script>
+
 </body>
 </html>
