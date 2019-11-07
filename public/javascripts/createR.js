@@ -14,7 +14,7 @@ function addIngrFields(){
 
 	newdiv.id = counter;
 
-	let deleteBtn = '<a style="text-align:right; margin-right:50px; background-color: orange; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:deleteFields('+ counter +')">Delete</a>';
+	let deleteBtn = '<a style="text-align:right; margin-right:50px; background-color: #ffb84f; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:deleteFields('+ counter +')">Delete</a>';
 
 	newdiv.innerHTML = document.getElementById('addIngrTemplate').innerHTML + deleteBtn;
 
