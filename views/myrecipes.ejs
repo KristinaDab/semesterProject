@@ -42,9 +42,20 @@
 				<p>Directions: </p>
 				<p><%=recipe.instructions%></p>  
 
-				<input type="button" class="editBtn" value="Edit">
+				<!-- The Modal -->
+				<div id="myModal_<%=recipe.recipe_id%>" class="modal">
 
-				<input type="button" class="deleteBtn" value="Delete">
+					<!-- Modal content -->
+					<div class="modal-content">
+						<span class="close">&times;</span>
+						<p>Some text in the Modal..<%=recipe.recipe_id%></p>
+					</div>
+
+				</div>
+
+				<button class="editBtn" id="editBtn_<%=recipe.recipe_id%>">Edit</button>
+
+				<button class="deleteBtn" id="deleteBtn_<%=recipe.recipe_id%>">Delete</button>
 
 				<br>
 				<br>
@@ -59,6 +70,9 @@
 	</div>
 	<!-- Script for the collapsible button -->
 	<script src="/javascripts/recipes-public.js" type="text/javascript"></script>
+
+	<!-- Script for modal -->
+	<script src="/javascripts/updateR.js" type="text/javascript"></script>
 
 </body>
 </html>
