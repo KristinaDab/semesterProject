@@ -3,11 +3,14 @@
 <head>
 	<title><%= title %></title>
 	<link rel='stylesheet' href='/stylesheets/style.css' />
+	<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
 </head>
 <body>
 	<%- include('menu', {active: "recipes"}); %>
 
 	<div class="main">
+
 		<h1><%= title %></h1>
 
 		<div id="allrecipes">
@@ -17,7 +20,7 @@
 			<%allrecipes.forEach(function (recipe) { %>
 			<br>
 
-			<button type="button" class="collapsible"><%=recipe.title%></button>
+			<button type="button" class="collapsibleBtn"><%=recipe.title%></button>
 
 			<div class="content">
 
@@ -49,9 +52,13 @@
 				</ul> 
 
 				<p>Directions:</p>
-
 				<p><%=recipe.instructions%></p>  
 
+				<input type="button" class="editBtn" value="Edit">
+				
+				<input type="button" class="deleteBtn" value="Delete">
+
+				<br>
 				<br>
 
 			</div>
