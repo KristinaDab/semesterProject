@@ -3,6 +3,7 @@
 <head>
 	<title><%= title %></title>
 	<link rel='stylesheet' href='/stylesheets/style.css' />
+	<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
 </head>
 <body>
 	<%- include('menu', {active: "myrecipes"}); %>
@@ -18,7 +19,7 @@
 
 			<% if(recipe.cook_username === username) {%>
 
-			<button type="button" class="collapsible"><%=recipe.title%></button>
+			<button type="button" class="collapsibleBtn"><%=recipe.title%></button>
 
 			<div class="content">
 				<br>
@@ -31,16 +32,25 @@
 				<ul> 
 					<%ingredients.forEach(function (ingr) { %>
 					<% if(recipe.recipe_id === ingr.recipe_id) {%>
-					<li><%=ingr.ingredient_name%><%=ingr.quantity%> <%=ingr.unit_code%></li>
+					<li><%=ingr.ingredient_name%> <%=ingr.quantity%> <%=ingr.unit_code%></li>
 					<br>
 					<%}%>
 					<% });%>
 
 				</ul> 
+				
 				<p>Directions: </p>
 				<p><%=recipe.instructions%></p>  
+
+				<input type="button" class="editBtn" value="Edit">
+
+				<input type="button" class="deleteBtn" value="Delete">
+
 				<br>
+				<br>
+
 			</div>
+
 			<%}%>
 			<%});%>
 
