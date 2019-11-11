@@ -23,6 +23,7 @@ var recipesRouter = require('./routes/recipes');
 var myRecipesRouter = require('./routes/myrecipes');
 var createRecipeRouter = require('./routes/createRecipe');
 var updateRecipeRouter = require('./routes/updateRecipe');
+var deleteRecipeRouter = require('./routes/deleteRecipe');
 
 var app = express();
 
@@ -51,6 +52,7 @@ app.use(function(req, res, next) {
   next();
 });
 
+//Add function for restricting access to pages if you are not logged in 
 function restrictAccess(req, res, next) {
   if (req.session.username) {
     next();
@@ -58,6 +60,7 @@ function restrictAccess(req, res, next) {
     res.redirect('/');
   }
 }
+
 
 app.get('/url', function (req, res) {
   res.render('view', {
@@ -76,6 +79,7 @@ app.use('/recipes', recipesRouter);
 app.use('/myrecipes', restrictAccess, myRecipesRouter);
 app.use('/createRecipe', restrictAccess, createRecipeRouter);
 app.use('/updateRecipe', restrictAccess, updateRecipeRouter);
+app.use('/deleteRecipe', restrictAccess, deleteRecipeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
