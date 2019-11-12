@@ -22,8 +22,8 @@ var homeRouter = require('./routes/home');
 var recipesRouter = require('./routes/recipes');
 var myRecipesRouter = require('./routes/myrecipes');
 var createRecipeRouter = require('./routes/createRecipe');
-var updateRecipeRouter = require('./routes/updateRecipe');
-var deleteRecipeRouter = require('./routes/deleteRecipe');
+// var updateRecipeRouter = require('./routes/updateRecipe');
+// var deleteRecipeRouter = require('./routes/deleteRecipe');
 
 var app = express();
 
@@ -78,8 +78,8 @@ app.use('/home', restrictAccess, homeRouter);
 app.use('/recipes', recipesRouter);
 app.use('/myrecipes', restrictAccess, myRecipesRouter);
 app.use('/createRecipe', restrictAccess, createRecipeRouter);
-app.use('/updateRecipe', restrictAccess, updateRecipeRouter);
-app.use('/deleteRecipe', restrictAccess, deleteRecipeRouter);
+// app.use('/updateRecipe', restrictAccess, updateRecipeRouter);
+// app.use('/deleteRecipe', restrictAccess, deleteRecipeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
