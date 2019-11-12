@@ -17,7 +17,8 @@
 
 			<!-- Loop through all the recipes from database and display them as follow -->
 
-			<%allrecipes.forEach(function (recipe) { %>
+			<%allrecipes.forEach(function (recipe){%>
+
 			<br>
 
 			<button type="button" class="collapsibleBtn"><%=recipe.title%></button>
@@ -56,14 +57,112 @@
 
 
 				<!-- The Modal for update -->
+
 				<div id="myModal_<%=recipe.recipe_id%>" class="modal">
 
-					<div class="modal-content">
-						<span class="close">&times;</span>
-						<p>Some text in the Modal..<%=recipe.recipe_id%></p>
-					</div>
+					<div class="modal-content createRecipe-form">
 
+						<span class="close">&times;</span>
+
+						<p>Edit recipe: <%=recipe.title%></p>
+
+						<form name="updateR" method="post" action="/updateRecipe/<%=recipe.recipe_id%>">
+							<p>Recipe title: </p>
+							<input id="inputtitle" type="text" name="title" placeholder="Recipe title" required value="<%=recipe.title%>" > 
+
+							<p>Category: </p>
+							<select name="listcategory" required>
+								<!-- Get category data from database and add it to options  -->
+								<%categories.forEach(function (cat) { %>
+								<%if(cat.category_name === recipe.category_name) {%>
+								<option value="<%=cat.category_name%>" selected="selected"><%=cat.category_name%></option>
+								<%}else{%>
+								<option value="<%=cat.category_name%>"><%=cat.category_name%></option>
+								<%}%>
+								<% });%>
+
+							</select>
+
+							<p>Yield:</p> 
+
+							<input id="inputyield" type="text" name="yield" placeholder="Yield" required value="<%=recipe.yield%>">
+
+
+							<p>Ingredients:</p> <br>
+
+							<div id="addNewIngredients" class="addNewIngredients">
+
+								<%ingredients.forEach(function (ingredient) { %>
+
+								<%if(recipe.recipe_id === ingredient.recipe_id) {%> 
+
+								<div id="<%=ingredient.ingredient_id%>">
+
+									<select class="listingredient" name="listingredient<%=ingredient.ingredient_id%>" required>
+
+										<!-- Get ingredients data from database and add it to options  -->
+
+										<%ingredients.forEach(function (ingr) { %>
+										<%if(ingr.ingredient_name === ingredient.ingredient_name) {%>
+										<option value="<%=ingr.ingredient_name%>" selected="selected"><%=ingr.ingredient_name%></option>
+										<% } else {%>
+										<option value="<%=ingr.ingredient_name%>"><%=ingr.ingredient_name%></option>
+										<% }%>
+
+										<% });%>
+
+									</select>
+
+									&nbsp Quantity: &nbsp
+									<input class="inputquantity" type="text" name="quantity<%=ingredient.ingredient_id%>" placeholder="Quantity" required value="<%=ingredient.quantity%>">
+
+									&nbsp Unit: &nbsp
+									<select class="listunit" name="listunit<%=ingredient.ingredient_id%>" required>
+
+										<!-- Get ingredient_unit data from database and add it to options  -->
+
+										<%units.forEach(function (unit) { %>
+
+										<%if(unit.unit_code === ingredient.unit_code) {%>
+										<option value="<%=unit.unit_code%>" selected="selected"><%=unit.unit_code%></option>
+										<% } else {%>
+										<option value="<%=unit.unit_code%>"><%=unit.unit_code%></option>
+										<% }%>
+
+										<% });%>
+
+									</select>
+
+									&nbsp
+
+									<a style="text-align:right; margin-right:50px; background-color: #ffb84f; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:deleteFields(<%=ingredient.ingredient_id%>)">Delete</a>	
+
+								</div>
+								
+								<%}%>
+								<%});%>
+
+								<br>
+
+								<!-- Here dynamically will be added ingredients after pressing a below button -->
+							</div>
+
+							<input type="button" id="addnewfieldBtn" value="Add ingredient" onClick="addIngrFields();">
+							<br>
+
+							<p>Directions:</p> 
+							<textarea rows="20" cols="54" id="inputdirections" type="text" name="directions" placeholder="Directions" required ><%=recipe.instructions%> </textarea>
+
+							<button id="btnCreate" type="submit">Save</button>
+
+							<input type="hidden" name="_method" value="PUT" />
+
+							<br>
+							<br>
+						</form>
+					</div>
 				</div>
+
 
 				<button class="editBtn" id="editBtn_<%=recipe.recipe_id%>">Edit</button>
 
@@ -71,21 +170,54 @@
 
 				<br>
 				<br>
-
 			</div>
-
 			<br>
-
-			<% });%>
+			<%});%>
 		</div>
-
 	</div>
-	
-	<!-- Script for the collapsible button -->
-	<script src="/javascripts/recipes-public.js" type="text/javascript"></script>
-	
-	<!-- Script for modal -->
-	<script src="/javascripts/updateR.js" type="text/javascript"></script>
+
+	<div id="addIngrTemplate" style="display: none">
+
+		<select class="listingredient" name="listingredient" required>
+
+			<!-- Get ingredients data from database and add it to options  -->
+
+			<%ingredients.forEach(function (ingr) { %>
+
+			<option value="<%=ingr.ingredient_name%>"><%=ingr.ingredient_name%></option>
+			<% });%>
+
+		</select>
+
+		&nbsp Quantity: &nbsp
+		<input class="inputquantity" type="text" name="quantity" placeholder="Quantity" required>
+
+		&nbsp Unit: &nbsp
+		<select class="listunit" name="listunit" required>
+
+			<!-- Get ingredient_unit data from database and add it to options  -->
+
+			<%units.forEach(function (unit) { %>
+			<option value="<%=unit.unit_code%>"><%=unit.unit_code%></option>
+			<% });%>
+
+		</select>
+
+		&nbsp
+
+	</select>
+
+</div>
+
+
+<!-- Script for the collapsible button -->
+<script src="/javascripts/recipes-public.js" type="text/javascript"></script>
+
+<!-- Script for modal -->
+<script src="/javascripts/updateR.js" type="text/javascript"></script>
+
+
+<script src="/javascripts/createR.js" type="text/javascript"> </script>
 
 </body>
 </html>
