@@ -2,12 +2,16 @@ var express = require('express');
 var router = express.Router();
 var db = require('../db');
 
-/* GET signin page. */
+/* GET login page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Welcome!', id: 'signin'});
+  if(req.session.loggedin) {
+    res.redirect('/home');
+  }else{
+    res.render('login', { title: 'Welcome!', id: 'signin'});
+  }
 });
 
-/* POST signin information */
+/* POST login information */
 router.post('/', function(req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
@@ -36,6 +40,21 @@ router.get('/logout', function(req, res, next) {
       }
     });
   }
+});
+
+router.get('/updateRecipe', function(req, res, next){
+  
+   res.render('updateRecipe', { title: 'update', id: 'update'});
+});
+
+router.put('/updateRecipe/(:recipe_id)', function(req, res, next){
+  
+  // res.render('updateRecipe', { title: 'update', id: 'update'});
+});
+
+router.post('/deleteRecipe/(:recipe_id)', function(req, res, next){
+    // res.render('deleteRecipe', { title: 'delete', id: 'delete'});
+
 });
 
 module.exports = router;
