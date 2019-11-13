@@ -42,19 +42,50 @@ router.get('/logout', function(req, res, next) {
   }
 });
 
-router.get('/updateRecipe', function(req, res, next){
+// Create variables with separate query strings
+
+// var query = 'SELECT * FROM category ORDER BY category_name';
+
+// var query1 = 'SELECT * FROM ingredient_unit ORDER BY unit_code';
+
+// var query2 = 'SELECT * FROM ingredient ORDER BY ingredient_name';
+
+// var query3 = 'SELECT r.title, r.recipe_id, r.cook_username, cat.category_name, r.yield, r.instructions FROM recipe AS r INNER JOIN category AS cat ON r.category_id = cat.category_id';
+
+
+
+// router.get('/updateRecipe', function(req, res, next){
+
+//   db.get().query(query, (error, categories, fields) => {
+
+//     db.get().query(query1, (error, units, fields) => {
+
+//       db.get().query(query2, (error, ingredients, fields) => {
+
+//         db.get().query(query3, (error, allrecipes, fields) => {
+
+//         // console.log(units);
+//         res.render('updateRecipe', { title: 'Update Recipe',user: req.session.username, id: 'updateRecipe', categories: categories, units: units, ingredients: ingredients, allrecipes: allrecipes});
+
+//       });
+
+//       });
+
+//     });
+
+//   });
   
-   res.render('updateRecipe', { title: 'update', id: 'update'});
-});
+// });
+
 
 router.put('/updateRecipe/(:recipe_id)', function(req, res, next){
-  
+
   // res.render('updateRecipe', { title: 'update', id: 'update'});
 });
 
 router.post('/deleteRecipe/(:recipe_id)', function(req, res, next){
     // res.render('deleteRecipe', { title: 'delete', id: 'delete'});
 
-});
+  });
 
 module.exports = router;
