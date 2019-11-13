@@ -64,7 +64,7 @@
 
 						<span class="close">&times;</span>
 
-						<p>Edit recipe: <%=recipe.title%></p>
+						<h3>Edit recipe: <%=recipe.title%></h3>
 
 						<form name="updateR" method="post" action="/updateRecipe/<%=recipe.recipe_id%>">
 							<p>Recipe title: </p>
@@ -90,7 +90,7 @@
 
 							<p>Ingredients:</p> <br>
 
-							<div id="addNewIngredients" class="addNewIngredients">
+							<div id="addNewIngredients<%=recipe.recipe_id%>" class="addNewIngredients">
 
 								<%ingredients.forEach(function (ingredient) { %>
 
@@ -135,7 +135,7 @@
 
 									&nbsp
 
-									<a style="text-align:right; margin-right:50px; background-color: #ffb84f; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:deleteFields(<%=ingredient.ingredient_id%>)">Delete</a>	
+									<a style="text-align:right; margin-right:50px; background-color: #ffb84f; color: white; text-decoration: none; padding: 8px 10px; display: inline-block;" href="javascript:deleteExistingFields(<%=ingredient.ingredient_id%>)">Delete</a>	
 
 								</div>
 								
@@ -147,7 +147,7 @@
 								<!-- Here dynamically will be added ingredients after pressing a below button -->
 							</div>
 
-							<input type="button" id="addnewfieldBtn" value="Add ingredient" onClick="addIngrFields();">
+							<input type="button" id="addnewfieldBtn" value="Add ingredient" onClick="addIngrFields(addNewIngredients<%=recipe.recipe_id%>);">
 							<br>
 
 							<p>Directions:</p> 
@@ -205,19 +205,15 @@
 
 		&nbsp
 
-	</select>
-
-</div>
+	</div>
 
 
-<!-- Script for the collapsible button -->
-<script src="/javascripts/recipes-public.js" type="text/javascript"></script>
+	<!-- Script for the collapsible button -->
+	<script src="/javascripts/recipes-public.js" type="text/javascript"></script>
 
-<!-- Script for modal -->
-<script src="/javascripts/updateR.js" type="text/javascript"></script>
+	<!-- Script for modal -->
+	<script src="/javascripts/updateR.js" type="text/javascript"></script>
 
-
-<script src="/javascripts/createR.js" type="text/javascript"> </script>
 
 </body>
 </html>
