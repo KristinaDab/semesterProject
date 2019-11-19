@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var db = require('../db');
 var bodyParser = require('body-parser');
+var mysql = require('mysql');
+
 
 
 // Create variables with separate query strings
@@ -16,6 +18,11 @@ var query2 = 'SELECT * FROM ingredient ORDER BY ingredient_name';
 var query3 = 'INSERT INTO recipe (title, yield, instructions, category_id, cook_username) VALUES (?,?,?, (SELECT category_id FROM category WHERE category_name = ?), (SELECT cook_username FROM cook WHERE cook_username = ?))';
 
 var query4 = 'INSERT INTO recipe_ingredient (recipe_id, ingredient_id, quantity, unit_code) VALUES ((SELECT recipe_id FROM recipe WHERE title = ?), (SELECT ingredient_id FROM ingredient WHERE ingredient_name = ?), ? , (SELECT unit_code FROM ingredient_unit WHERE unit_code = ?))';
+
+
+var updateRecipe = 'UPDATE recipe SET title = ?, yield = ?, instructions = ?, category_id = (SELECT category_id FROM category WHERE category_name = ?) WHERE recipe_id = ?';
+
+var updateRecipe_Ingr = 'UPDATE recipe_ingredient SET ingredient_id =  ';
 
 
 // GET categories, ingredients and units data from the database 
@@ -38,11 +45,13 @@ router.get('/', (req, res, next) => {
 	});
 });
 
-// POST a recipe form data to the database 
+
+
+// POST a recipe form data to the database with transaction
 
 router.post('/', function(req, res, next) {
 
-	// Create variables for input results from the new-recipe form 
+	// Get input from the createRecipe form
 
 	var title = req.body.title;
 	var amount = req.body.yield;
@@ -50,15 +59,23 @@ router.post('/', function(req, res, next) {
 	var category = req.body.listcategory;
 	var user = req.session.username;
 
-	// Assign new-recipe form input resuts to the query string
+	// Start new connection to the database pool and 
+	//assign new-recipe form input resuts to the query string
 
-	db.get().query(query3,[title, amount, directions, category, user], (error, newRecipe, fields) => {
-		
-		// If something goes wrong, we write an error to the console
+	db.get().getConnection(function(err, con) {
 
-		if(error) {
-			console.log(error);
-		}
+		con.beginTransaction(function(err) {
+
+			con.query(query3,[title, amount, directions, category, user], (error, newRecipe, fields) => {
+
+				if(error) {
+					return con.rollback(function() {
+
+						console.log(error);
+						throw error;
+
+					})
+				}
 
 		// Create varible which gets all the elements from the new-recipe form
 
@@ -72,8 +89,6 @@ router.post('/', function(req, res, next) {
 		// Loop through the form keys to find all dynamically added input fields
 
 		for (const value in keys) {
-
-			// We start counting from 1, because dynamic fields names start with 1 
 
 			count = count + 1;
 
@@ -92,23 +107,44 @@ router.post('/', function(req, res, next) {
 
 			// Assign dynamic fields to query string 
 
-			db.get().query(query4, [title, ingredient, quantity, unit], (error, newIngredient, fields) => {
+			con.query(query4, [title, ingredient, quantity, unit], (error, newIngredient, fields) => {
 
 				// Catch errors if any 
 
 				if(error) {
-					console.log(error);
+					return con.rollback(function() {
+						console.log(error);
+						throw error;
+
+					})
 				}
-
 			});
-
 		};
+
+		// If there were no errors, commit data to the database. 
+		// In case of errors- roll back
+
+		con.commit(function(err){
+			if(err) {
+				return con.rollback(function() {
+					console.log(error);
+					throw error;
+
+				})
+			}
+		})
+
+		console.log("Success!!!")
+
 		// Redirect to the recipes page
 		res.redirect('/recipes');
 
 		  // End the connection to the database
 		  res.end();
-	});
+		});
+
+		})
+	})
 
 });
 
