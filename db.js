@@ -7,13 +7,19 @@ var state = {
 
 exports.connection = function(done) {
 	if (state.db) return done();
-	state.db = mysql.createConnection({
-		connectionLimit : 10,
+	state.db = mysql.createPool({
+		connectionLimit : 5,
 		host: 'localhost',
 		user: 'restaurantProject',
 		password: 'restaurant1234',
 		database: 'restaurantdb'
 	});
+	// var getConnection = function() {
+	// 	state.db.getConnection(function(err, connection){
+	// 		if(err) throw err;
+	// 		return connection;
+	// 	})
+	// }
 	done();
 };
 
