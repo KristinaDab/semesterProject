@@ -20,11 +20,6 @@ var query3 = 'INSERT INTO recipe (title, yield, instructions, category_id, cook_
 var query4 = 'INSERT INTO recipe_ingredient (recipe_id, ingredient_id, quantity, unit_code) VALUES ((SELECT recipe_id FROM recipe WHERE title = ?), (SELECT ingredient_id FROM ingredient WHERE ingredient_name = ?), ? , (SELECT unit_code FROM ingredient_unit WHERE unit_code = ?))';
 
 
-var updateRecipe = 'UPDATE recipe SET title = ?, yield = ?, instructions = ?, category_id = (SELECT category_id FROM category WHERE category_name = ?) WHERE recipe_id = ?';
-
-var updateRecipe_Ingr = 'UPDATE recipe_ingredient SET ingredient_id =  ';
-
-
 // GET categories, ingredients and units data from the database 
 
 router.get('/', (req, res, next) => {
