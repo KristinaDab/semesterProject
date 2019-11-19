@@ -66,9 +66,13 @@
 
 						<h3>Edit recipe: <%=recipe.title%></h3>
 
-						<form name="updateR" method="post" action="/updateRecipe/<%=recipe.recipe_id%>">
+						<form name="updateR" method="post" action="/recipes">
+
 							<p>Recipe title: </p>
 							<input id="inputtitle" type="text" name="title" placeholder="Recipe title" required value="<%=recipe.title%>" > 
+
+							<p>Recipe id: </p>
+							<input id="inputid" type="text" name="thisrecipeid" placeholder="Recipe id" required value="<%=recipe.recipe_id%>" readonly="true"> 
 
 							<p>Category: </p>
 							<select name="listcategory" required>
@@ -98,13 +102,15 @@
 
 								<div id="<%=ingredient.ingredient_id%>">
 
-									<select class="listingredient" name="listingredient<%=ingredient.ingredient_id%>" required>
+									<select class="listingredient" name="listingredient<%=ingredient.ingredient_id%>" disabled required>
+
 
 										<!-- Get ingredients data from database and add it to options  -->
-
 										<%ingredients.forEach(function (ingr) { %>
 										<%if(ingr.ingredient_name === ingredient.ingredient_name) {%>
+
 										<option value="<%=ingr.ingredient_name%>" selected="selected"><%=ingr.ingredient_name%></option>
+
 										<% } else {%>
 										<option value="<%=ingr.ingredient_name%>"><%=ingr.ingredient_name%></option>
 										<% }%>
@@ -154,8 +160,6 @@
 							<textarea rows="20" cols="54" id="inputdirections" type="text" name="directions" placeholder="Directions" required ><%=recipe.instructions%> </textarea>
 
 							<button id="btnCreate" type="submit">Save</button>
-
-							<input type="hidden" name="_method" value="PUT" />
 
 							<br>
 							<br>
