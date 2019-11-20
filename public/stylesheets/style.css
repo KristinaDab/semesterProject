@@ -279,3 +279,9 @@ li.dropdown {
   text-decoration: none;
   cursor: pointer;
 }
+
+/*Read-only class*/
+
+.readonly {
+  background-color: #eaeaea;
+}
