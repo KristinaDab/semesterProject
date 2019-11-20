@@ -14,6 +14,7 @@ var query1 = 'SELECT * FROM ingredient_unit ORDER BY unit_code';
 
 var query2 = 'SELECT * FROM ingredient ORDER BY ingredient_name';
 
+var onlyIngredients = 'SELECT ingredient_name, ingredient_id FROM ingredient';
 
 var query3 = 'INSERT INTO recipe (title, yield, instructions, category_id, cook_username) VALUES (?,?,?, (SELECT category_id FROM category WHERE category_name = ?), (SELECT cook_username FROM cook WHERE cook_username = ?))';
 
@@ -30,11 +31,13 @@ router.get('/', (req, res, next) => {
 
 			db.get().query(query2, (error, ingredients, fields) => {
 
-				// console.log(units);
-				res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe', user: req.session.username, categories: categories, units: units, ingredients: ingredients});	
+					db.get().query(onlyIngredients, (error, onlyIngr, fields) => {
 
+					// console.log(units);
+					res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe', user: req.session.username, categories: categories, units: units, ingredients: ingredients, onlyIngr: onlyIngr});	
+
+				});
 			});
-
 		});
 
 	});
