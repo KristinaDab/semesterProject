@@ -68,11 +68,10 @@
 
 						<form name="updateR" method="post" action="/recipes">
 
-							<p>Recipe title: </p>
-							<input id="inputtitle" type="text" name="title" placeholder="Recipe title" required value="<%=recipe.title%>" > 
+							<input id="inputid" class="readonly" type="hidden" name="thisrecipeid" placeholder="Recipe id" required value="<%=recipe.recipe_id%>" readonly="true"> 
 
-							<p>Recipe id: </p>
-							<input id="inputid" type="text" name="thisrecipeid" placeholder="Recipe id" required value="<%=recipe.recipe_id%>" readonly="true"> 
+							<p>Recipe title: </p>
+							<input id="inputtitle"  type="text" name="title" placeholder="Recipe title" required value="<%=recipe.title%>"> 
 
 							<p>Category: </p>
 							<select name="listcategory" required>
@@ -102,22 +101,23 @@
 
 								<div id="<%=ingredient.ingredient_id%>">
 
-									<select class="listingredient" name="listingredient<%=ingredient.ingredient_id%>" disabled required>
+									<select class="listingredient readonly" name="listingredient<%=ingredient.ingredient_id%>" required>
 
 
-										<!-- Get ingredients data from database and add it to options  -->
-										<%ingredients.forEach(function (ingr) { %>
+										<!-- Get ingredients data from database and select the correct ingredient for that recipe
+										We don't want it to be editible therefore it is the only option available  -->
+
+										<%onlyIngr.forEach(function (ingr) { %>
 										<%if(ingr.ingredient_name === ingredient.ingredient_name) {%>
 
 										<option value="<%=ingr.ingredient_name%>" selected="selected"><%=ingr.ingredient_name%></option>
 
-										<% } else {%>
-										<option value="<%=ingr.ingredient_name%>"><%=ingr.ingredient_name%></option>
-										<% }%>
+										<% } %>
 
 										<% });%>
 
 									</select>
+
 
 									&nbsp Quantity: &nbsp
 									<input class="inputquantity" type="text" name="quantity<%=ingredient.ingredient_id%>" placeholder="Quantity" required value="<%=ingredient.quantity%>">
@@ -186,7 +186,7 @@
 
 			<!-- Get ingredients data from database and add it to options  -->
 
-			<%ingredients.forEach(function (ingr) { %>
+			<%onlyIngr.forEach(function (ingr) { %>
 
 			<option value="<%=ingr.ingredient_name%>"><%=ingr.ingredient_name%></option>
 			<% });%>
