@@ -3,7 +3,7 @@ var router = express.Router();
 var db = require('../db');
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
-
+var async = require('async');
 
 
 // Create variables with separate query strings
@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
 
 			db.get().query(query2, (error, ingredients, fields) => {
 
-					db.get().query(onlyIngredients, (error, onlyIngr, fields) => {
+				db.get().query(onlyIngredients, (error, onlyIngr, fields) => {
 
 					// console.log(units);
 					res.render('createRecipe', { title: 'Create A Recipe', id: 'createrecipe', user: req.session.username, categories: categories, units: units, ingredients: ingredients, onlyIngr: onlyIngr});	
@@ -47,10 +47,117 @@ router.get('/', (req, res, next) => {
 
 // POST a recipe form data to the database with transaction
 
+// router.post('/', function(req, res, next) {
+
+// 	// Get input from the createRecipe form
+
+// 	var title = req.body.title;
+// 	var amount = req.body.yield;
+// 	var directions = req.body.directions;
+// 	var category = req.body.listcategory;
+// 	var user = req.session.username;
+
+// 	// Start new connection to the database pool and 
+// 	//assign new-recipe form input resuts to the query string
+
+// 	db.get().getConnection(function(err, con) {
+
+// 		con.beginTransaction(function(err) {
+
+// 			con.query(query3,[title, amount, directions, category, user], (error, newRecipe, fields) => {
+
+// 				if(error) {
+// 					return con.rollback(function() {
+
+// 						console.log(error);
+// 						throw error;
+// 						res.end();
+
+// 					})
+// 				} 
+
+// 				// Create varible which gets all the elements from the new-recipe form
+
+// 				const keys = Object.keys(req.body);
+
+// 				// Set a counter which keeps track of how many there are dynamic input field names
+// 				// that start with listingredient, quantity and listunit. 
+
+// 				var count = 0;
+
+// 				// Loop through the form keys to find all dynamically added input fields
+
+// 				for (const value in keys) {
+
+// 					count = count + 1;
+
+// 					// Now to each dynamic field name that starts with listingredient, quantity and listunit we add a count 
+// 					// that's how we find names that exist
+
+// 					var ingredient = req.body['listingredient' + count];
+// 					var quantity =  req.body['quantity' + count];
+// 					var unit = req.body['listunit' + count];
+
+// 					// Skip values that are undefined 
+
+// 					if (ingredient === undefined) {
+// 						continue;
+// 					}
+
+// 					// Assign dynamic fields to query string 
+
+// 					con.query(query4, [title, ingredient, quantity, unit], (error, newIngredient, fields) => {
+
+// 					// Catch errors if any 
+
+// 						if(error) {
+// 							return con.rollback(function() {
+// 								console.log(error);
+// 								throw error;
+// 								res.end();
+
+// 							});
+// 						}
+
+// 					});
+// 				};
+
+// 				// If there were no errors, commit data to the database. 
+// 				// In case of errors- roll back
+
+// 				con.commit(function(err){
+// 					if(err) {
+// 						return con.rollback(function() {
+// 							console.log(error);
+// 							throw error;
+// 							res.end();
+
+// 						});
+// 					}
+
+// 					console.log("Success!!!")
+
+// 					res.redirect('/recipes');
+// 				});
+
+// 				// Redirect to the recipes page
+
+
+// 		  		// End the connection to the database
+// 		  		// res.end();
+// 			});
+
+// 		});
+// 	});
+
+// });
+
+
 router.post('/', function(req, res, next) {
 
 	// Get input from the createRecipe form
-
+	  //to test a user intended rollback
+	
 	var title = req.body.title;
 	var amount = req.body.yield;
 	var directions = req.body.directions;
@@ -62,87 +169,96 @@ router.post('/', function(req, res, next) {
 
 	db.get().getConnection(function(err, con) {
 
-		con.beginTransaction(function(err) {
+		async.waterfall([
 
-			con.query(query3,[title, amount, directions, category, user], (error, newRecipe, fields) => {
+			function (callback) {
+      			//Actually we do not use results here - only for demo
+      			sql= "start transaction";
+      			con.query(
+      				sql, (error, results, fields) => {
+      					console.log("1. Start transaction", error, results);
+      					callback(error,results);
+      				});
 
-				if(error) {
-					return con.rollback(function() {
+      		},
 
-						console.log(error);
-						throw error;
 
-					})
-				}
 
-		// Create varible which gets all the elements from the new-recipe form
+      		function (results, callback) {
+      			con.query(query3,[title, amount, directions, category, user], (error, results, fields) => {
+      				
+      				console.log("2. query3", error, results);
+      				callback(error,results);
+      			});
 
-		const keys = Object.keys(req.body);
+      		},
 
-		// Set a counter which keeps track of how many there are dynamic input field names
-		// that start with listingredient, quantity and listunit. 
+      		function (results, callback) {
 
-		var count = 0;
+ 				// Create varible which gets all the elements from the new-recipe form
 
-		// Loop through the form keys to find all dynamically added input fields
+ 				const keys = Object.keys(req.body);
 
-		for (const value in keys) {
+ 			
+				// Set a counter which keeps track of how many there are dynamic input field names
+				// that start with listingredient, quantity and listunit. 
 
-			count = count + 1;
+				var count = 0;
 
-			// Now to each dynamic field name that starts with listingredient, quantity and listunit we add a count 
-			// that's how we find names that exist
+				// Loop through the form keys to find all dynamically added input fields
 
-			var ingredient = req.body['listingredient' + count];
-			var quantity =  req.body['quantity' + count];
-			var unit = req.body['listunit' + count];
+				async.forEachOf(keys, function(value, cb) {
 
-			// Skip values that are undefined 
+					count = count + 1;
+					
+					var ingredient = req.body['listingredient' + count];
+					var quantity =  req.body['quantity' + count];
+					var unit = req.body['listunit' + count];
 
-			if (ingredient === undefined) {
-				continue;
+					// Skip values that are undefined 
+
+					if (ingredient !== undefined) {
+
+						con.query(query4, [title, ingredient, quantity, unit], (error, results, fields)  => {
+					
+						console.log("3. query4", error, results);
+						});
+					}
+					
+				}, callback());
+
 			}
 
-			// Assign dynamic fields to query string 
+		],
 
-			con.query(query4, [title, ingredient, quantity, unit], (error, newIngredient, fields) => {
+			function (err,results) { //async.waterfall final result
+				if (err)
+				{
+					console.log("****** Failure:"+ err)
+					sql= "rollback";
+					con.query(
+						sql, function (error, results, fields) {
+							console.log("After rollback:",error, results);
 
-				// Catch errors if any 
+						});
+					res.redirect('/createRecipe');
 
-				if(error) {
-					return con.rollback(function() {
-						console.log(error);
-						throw error;
+                //throw err; //?
 
-					})
-				}
-			});
-		};
+            	}else{
+            		console.log(">>>>>> Success till now:"+ results)
+            		sql= "commit";
+            		con.query(
+            			sql, function (error, results, fields) {
+            				console.log("After commit:",error, results);
+            			});
+            		res.redirect('/recipes');
+            	}
 
-		// If there were no errors, commit data to the database. 
-		// In case of errors- roll back
+            	
+        });
 
-		con.commit(function(err){
-			if(err) {
-				return con.rollback(function() {
-					console.log(error);
-					throw error;
-
-				})
-			}
-		})
-
-		console.log("Success!!!")
-
-		// Redirect to the recipes page
-		res.redirect('/recipes');
-
-		  // End the connection to the database
-		  res.end();
-		});
-
-		})
-	})
+	});
 
 });
 
