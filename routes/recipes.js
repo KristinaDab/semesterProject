@@ -33,23 +33,38 @@ router.get('/', (req, res, next) => {
 
 	db.get().query(query, (error, categories, fields) => {
 
-		console.log("query");
+		if(error) {
+			console.log(error);
+			throw error;
+		} 
 
 		db.get().query(query1, (error, allrecipes, fields) => {
 
-			console.log("query1");
+			if(error) {
+				console.log(error);
+				throw error;
+			} 
 
 			db.get().query(query2, (error, ingredients, fields) => {
 
-				console.log("query2");
+				if(error) {
+					console.log(error);
+					throw error;
+				} 
 
 				db.get().query(query3, (error, units, fields) => {
 
-					console.log("query3");
+					if(error) {
+						console.log(error);
+						throw error;
+					} 
 
 					db.get().query(onlyIngredients, (error, onlyIngr, fields) => {
 
-						console.log("onlyIngredients");
+						if(error) {
+							console.log(error);
+							throw error;
+						} 
 
 						res.render('recipes', { title: 'Recipes', user: req.session.username, id: 'recipes', categories: categories, units: units, ingredients: ingredients, onlyIngr: onlyIngr, allrecipes : allrecipes});	
 					});
@@ -114,107 +129,138 @@ router.post('/updateRecipe', function(req, res, next) {
 					// If we deleted an ingredient from the update-form, it will be undefined
 					// The undefined ingredient we can delete from the database
 
-					for (const value of recipeIngredients) {
 
-						var ingredient = req.body['listingredient' + value.ingredient_id];
-						var quantity =  req.body['quantity' + value.ingredient_id];
-						var unit = req.body['listunit' + value.ingredient_id];
+					async function loopIngrAndCommit() { 
+
+						for (const value of recipeIngredients) {
+
+							var ingredient = req.body['listingredient' + value.ingredient_id];
+							var quantity =  req.body['quantity' + value.ingredient_id];
+							var unit = req.body['listunit' + value.ingredient_id];
 
 
-						if (ingredient === undefined) {
+							if (ingredient === undefined) {
 
-							// DELETE that ingredient from database table recipe_ingredient
+								// DELETE that ingredient from database table recipe_ingredient
 
-							con.query(deleteIngr, [value.ingredient_id, recipeid], (error, deletedIngr, fields) => {
+								con.query(deleteIngr, [value.ingredient_id, recipeid], (error, deletedIngr, fields) => {
+
+									if(error) {
+										return con.rollback(function() {
+											console.log(error);
+											throw error;
+										});
+									}
+
+									console.log("5. deleteIngr");
+
+								});
+								// continue;
+							} else {
+
+							// UPDATE ingredients
+
+							con.query(updateRecipe_Ingr, [quantity, unit, recipeid, value.ingredient_id], (error, updatedIngr, fields) => {
 
 								if(error) {
 									return con.rollback(function() {
 										console.log(error);
 										throw error;
+
 									});
 								}
 
-								console.log("5. deleteIngr");
-
+								console.log("6. updateRecipe_Ingr");
 							});
-							continue;
-						} 
 
-						// UPDATE ingredients
+						}
 
-						con.query(updateRecipe_Ingr, [quantity, unit, recipeid, value.ingredient_id], (error, updatedIngr, fields) => {
-
-							if(error) {
-								return con.rollback(function() {
-									console.log(error);
-									throw error;
-
-								});
-							}
-
-							console.log("6. updateRecipe_Ingr");
+						await new Promise((resolve, reject) => {
+							setTimeout(() => resolve("done!"), 250)
 						});
+
 					}
 
-					// Get new ingredients that have been added to the update form with unique name-id's
+						// Get new ingredients that have been added to the update form with unique name-id's
 
-					const keys = Object.keys(req.body);
+						const keys = Object.keys(req.body);
 
-					var count = 200;
+						var count = 200;
 
-					for (const newValue in keys) {
+						for (const newValue in keys) {
 
-						count = count + 1;
+							count = count + 1;
 
-						var newIngredient = req.body['listingredient' + count];
-						var newQuantity =  req.body['quantity' + count];
-						var newUnit = req.body['listunit' + count];
+							var newIngredient = req.body['listingredient' + count];
+							var newQuantity =  req.body['quantity' + count];
+							var newUnit = req.body['listunit' + count];
 
-						if (newIngredient === undefined) {
-							continue;
-						}
-
-						// ADD new ingredients to the database table recipe_ingredient 
-
-						con.query(insertIngr, [recipeid, newIngredient, newQuantity, newUnit], (error, insertedIngr, fields) => {
-
-							if(error) {
-								return con.rollback(function() {
-									console.log(error);
-									throw error;
-
-								});
+							if (newIngredient === undefined) {
+								continue;
 							}
 
-							console.log("7. insertedIngr");
-						});	
-					}
+							// ADD new ingredients to the database table recipe_ingredient 
 
-					// If all went smooth, commit data to the database
+							con.query(insertIngr, [recipeid, newIngredient, newQuantity, newUnit], (error, insertedIngr, fields) => {
 
-					con.commit(function(err){
-						if(err) {
-							return con.rollback(function() {
-								console.log(error);
-								throw error;
+								if(error) {
+									return con.rollback(function() {
+										console.log(error);
+										throw error;
+
+									});
+								}
+
+								console.log("7. insertedIngr");
+							});	
+
+							await new Promise((resolve, reject) => {
+								setTimeout(() => resolve("done!"), 250)
 							});
 						}
 
-						console.log("8. Transaction successful!!!")
+						// If all went smooth, commit data to the database
 
-						res.redirect('/recipes');
-					});
+						con.commit(function(err){
+							if(err) {
+								return con.rollback(function() {
+									console.log(error);
+									throw error;
+								});
+							}
+
+							console.log("8. Transaction successful!!!")
+
+							res.redirect('/recipes');
+						});
+					};
+
+					loopIngrAndCommit();
 				});	
 			});
 		});	
 	});
 });
 
+
+// POST Delete recipe
+
 router.post('/deleteRecipe', function(req, res, next) {
 
-	var recipeid = req.body.thisrecipeid; 
+	db.get().getConnection(function(err, con) {
 
-	db.get().query(deleteRecipe,[recipeid], (error, deletedRecipe, fields) => {
+		console.log("1. getConnection");
+
+		con.beginTransaction(function(err) {
+
+			console.log("2. beginTransaction");
+			
+
+			// Get id of the current recipe
+
+			var recipeid = req.body.thisrecipeid; 
+
+			db.get().query(deleteRecipe,[recipeid], (error, deletedRecipe, fields) => {
 
 				if(error) {
 					return con.rollback(function() {
@@ -223,8 +269,24 @@ router.post('/deleteRecipe', function(req, res, next) {
 
 					});
 				}
-				console.log("Successfully deleted");
-				res.redirect('/recipes');
+				console.log("Deleting...");
+
+				con.commit(function(err){
+					
+					if(err) {
+						return con.rollback(function() {
+							console.log(error);
+							throw error;
+						});
+					}
+
+					console.log("Deleted successfully!!!")
+
+					res.redirect('/recipes');
+				});
+			});
+
+		});
 	});
 
 });
