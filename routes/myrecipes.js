@@ -21,6 +21,7 @@ var updateRecipe = 'UPDATE recipe SET title = ?, yield = ?, instructions = ?, ca
 
 var updateRecipe_Ingr = 'UPDATE recipe_ingredient SET quantity = ?, unit_code = ? WHERE recipe_id = ? AND ingredient_id = ?';
 
+var deleteRecipe = 'DELETE FROM recipe WHERE recipe_id = ?';
 
 // Get the recipes from the database
 
@@ -47,7 +48,7 @@ router.get('/', (req, res, next) => {
 
 // Post recipe update information from the update form
 
-router.post('/', function(req, res, next) {
+router.post('/updateRecipe', function(req, res, next) {
 
 	var title = req.body.title;
 	var amount = req.body.yield;
@@ -187,6 +188,26 @@ router.post('/', function(req, res, next) {
 
 		})	
 	})
+
+});
+
+
+router.post('/deleteRecipe', function(req, res, next) {
+
+	var recipeid = req.body.thisrecipeid; 
+
+	db.get().query(deleteRecipe,[recipeid], (error, deletedRecipe, fields) => {
+
+				if(error) {
+					return con.rollback(function() {
+						console.log(error);
+						throw error;
+
+					});
+				}
+				console.log("Successfully deleted");
+				res.redirect('/myrecipes');
+	});
 
 });
 
