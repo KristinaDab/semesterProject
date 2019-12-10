@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../db');
 var mysql = require('mysql');
+var async = require('async');
 
 
 //Initializing mysql queries to avoid long strings in the code
@@ -24,19 +25,31 @@ var updateRecipe = 'UPDATE recipe SET title = ?, yield = ?, instructions = ?, ca
 
 var updateRecipe_Ingr = 'UPDATE recipe_ingredient SET quantity = ?, unit_code = ? WHERE recipe_id = ? AND ingredient_id = ?';
 
+var deleteRecipe = 'DELETE FROM recipe WHERE recipe_id = ?';
+
 
 // Get all the recipes, categories and ingredients
 router.get('/', (req, res, next) => {
 
 	db.get().query(query, (error, categories, fields) => {
 
+		console.log("query");
+
 		db.get().query(query1, (error, allrecipes, fields) => {
+
+			console.log("query1");
 
 			db.get().query(query2, (error, ingredients, fields) => {
 
+				console.log("query2");
+
 				db.get().query(query3, (error, units, fields) => {
 
+					console.log("query3");
+
 					db.get().query(onlyIngredients, (error, onlyIngr, fields) => {
+
+						console.log("onlyIngredients");
 
 						res.render('recipes', { title: 'Recipes', user: req.session.username, id: 'recipes', categories: categories, units: units, ingredients: ingredients, onlyIngr: onlyIngr, allrecipes : allrecipes});	
 					});
@@ -46,9 +59,10 @@ router.get('/', (req, res, next) => {
 	});
 });
 
+
 // Post recipe update information from the update form
 
-router.post('/', function(req, res, next) {
+router.post('/updateRecipe', function(req, res, next) {
 
 	var title = req.body.title;
 	var amount = req.body.yield;
@@ -62,7 +76,11 @@ router.post('/', function(req, res, next) {
 
 	db.get().getConnection(function(err, con) {
 
+		console.log("1. getConnection");
+
 		con.beginTransaction(function(err) {
+
+			console.log("2. beginTransaction");
 
 			// Update recipe title, yield, category and directions 
 
@@ -70,12 +88,13 @@ router.post('/', function(req, res, next) {
 
 				if(error) {
 					return con.rollback(function() {
-
 						console.log(error);
 						throw error;
 
-					})
+					});
 				}
+
+				console.log("3. update recipe title yield and so on");
 
 				// Get current ingredients of the recipe we want to update
 
@@ -85,9 +104,11 @@ router.post('/', function(req, res, next) {
 						return con.rollback(function() {
 							console.log(error);
 							throw error;
-
-						})
+						});
 					}
+
+					console.log("4. getRecipeIngr");
+
 
 					// Compare update-form ingredients with current recipe_ingredients 
 					// If we deleted an ingredient from the update-form, it will be undefined
@@ -110,11 +131,12 @@ router.post('/', function(req, res, next) {
 									return con.rollback(function() {
 										console.log(error);
 										throw error;
-
-									})
+									});
 								}
-							})
 
+								console.log("5. deleteIngr");
+
+							});
 							continue;
 						} 
 
@@ -127,10 +149,11 @@ router.post('/', function(req, res, next) {
 									console.log(error);
 									throw error;
 
-								})
+								});
 							}
-						})
 
+							console.log("6. updateRecipe_Ingr");
+						});
 					}
 
 					// Get new ingredients that have been added to the update form with unique name-id's
@@ -151,46 +174,61 @@ router.post('/', function(req, res, next) {
 							continue;
 						}
 
-							// ADD new ingredients to the database table recipe_ingredient 
+						// ADD new ingredients to the database table recipe_ingredient 
 
-							con.query(insertIngr, [recipeid, newIngredient, newQuantity, newUnit], (error, insertedIngr, fields) => {
+						con.query(insertIngr, [recipeid, newIngredient, newQuantity, newUnit], (error, insertedIngr, fields) => {
 
-								if(error) {
-									return con.rollback(function() {
-										console.log(error);
-										throw error;
+							if(error) {
+								return con.rollback(function() {
+									console.log(error);
+									throw error;
 
-									})
-								}
-							})
+								});
+							}
 
-							
+							console.log("7. insertedIngr");
+						});	
+					}
+
+					// If all went smooth, commit data to the database
+
+					con.commit(function(err){
+						if(err) {
+							return con.rollback(function() {
+								console.log(error);
+								throw error;
+							});
 						}
-					})
 
-			})
+						console.log("8. Transaction successful!!!")
 
-			// If all went smooth, commit data to the database
+						res.redirect('/recipes');
+					});
+				});	
+			});
+		});	
+	});
+});
 
-			con.commit(function(err){
-				if(err) {
+router.post('/deleteRecipe', function(req, res, next) {
+
+	var recipeid = req.body.thisrecipeid; 
+
+	db.get().query(deleteRecipe,[recipeid], (error, deletedRecipe, fields) => {
+
+				if(error) {
 					return con.rollback(function() {
 						console.log(error);
 						throw error;
 
-					})
+					});
 				}
-			})
-
-			console.log("Success!!!")
-
-			res.redirect('/recipes');
-
-		})	
-	})
-
+				console.log("Successfully deleted");
+				res.redirect('/recipes');
+	});
 
 });
+
 
 module.exports = router;
 
