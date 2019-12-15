@@ -16,6 +16,7 @@
 		<div class="createRecipe-form">
 			
 			<form name="createR" method="post" action="/createrecipe">
+
 				<p>Recipe title: </p>
 				<input id="inputtitle" type="text" name="title" placeholder="Recipe title" required> 
 
@@ -31,15 +32,14 @@
 				</select>
 
 				<p>Yield:</p> 
-
 				<input id="inputyield" type="text" name="yield" placeholder="Yield" required>
-
 
 				<p>Ingredients:</p> <br>
 
 				<div id="addNewIngredients" >
 
-					<!-- Here dynamically will be added ingredients after pressing a below button -->
+					<!-- Here dynamically will be added ingredients after pressing the below button -->
+
 				</div>
 
 				<input type="button" id="addnewfieldBtn" value="Add ingredient" onClick="addIngrFields();">
@@ -49,6 +49,7 @@
 				<textarea rows="20" cols="54" id="inputdirections" type="text" name="directions" placeholder="Directions" required> </textarea>
 
 				<button id="btnCreate" type="submit">Create Recipe</button>
+				
 			</form>
 		</div>
 
