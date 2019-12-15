@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chef's Recipes</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+	<title>Chef's Recipes</title>
+	<link rel='stylesheet' href='/stylesheets/style.css' />
+	<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
 </head>
 <body>
-  <%- include('menu', {active: "home"}); %>
-  <div class="main">
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %>, <%= user %></p>
-  </div>
+	<!-- Including menu and setting active class to home -->
+	<%- include('menu', {active: "home"}); %>
+	
+	<div class="main">
+		<h1><%= title %></h1>
+		<p>Welcome to <%= title %>, <%= user %></p>
+		
+		<img class="image" src="images/background.jpg" alt="Food">
+		
+	</div>
 
 </body>
 </html>
