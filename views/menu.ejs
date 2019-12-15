@@ -7,22 +7,29 @@
 </head>
 <body>
 
-	<ul id="menu-ul">
-		<li><a <%if(id=="home"){%>class="active"<%}%> href="/home">Home</a></li>
+	<div class="main">
 
-		<li class="dropdown">
-			<a <%if(id=="recipes" || id=="createrecipe"){%>class="active"<%}%> href="/recipes" class="dropbtn">Recipes</a>
-			<div class="dropdown-content">
-				<a href="/createrecipe">Create A Recipe</a>
-			</div>
-		</li>
+		<!-- Menu with drop down -->
 
-		<li><a <%if(id=="myrecipes"){%>class="active"<%}%> href="/myrecipes">My Recipes</a></li>
-		
-		<li id="logout"><%=user%><a href="/logout"> Log out</a></li>
-	
+		<ul id="menu-ul">
 
-	</ul>
+			<li><a <%if(id=="home"){%>class="active"<%}%> href="/home">Home</a></li>
 
+			<li class="dropdown">
+
+				<a <%if(id=="recipes" || id=="createrecipe"){%>class="active"<%}%> href="/recipes" class="dropbtn">Recipes</a>
+
+				<div class="dropdown-content">
+					<a href="/createrecipe">Create A Recipe</a>
+				</div>
+				
+			</li>
+
+			<li><a <%if(id=="myrecipes"){%>class="active"<%}%> href="/myrecipes">My Recipes</a></li>
+
+			<li id="logout"><%=user%><a href="/logout"> Log out</a></li>
+
+		</ul>
+	</div>
 </body>
 </html>
