@@ -1,8 +1,6 @@
-		
+//Script for adding the ingredient fields and deleting the ingredient fields in the "create recipe" form
+
 let counter = 0;
-
-// let limit = 20;
-
 
 // add another ingredient field 
 
