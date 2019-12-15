@@ -266,7 +266,6 @@ router.post('/deleteRecipe', function(req, res, next) {
 					});
 				}
 				console.log("Deleting...");
-				// res.redirect('/myrecipes');
 
 				con.commit(function(err){
 					if(err) {
