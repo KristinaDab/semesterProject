@@ -1,3 +1,5 @@
+
+
 // Get all the modals with the class name "modal"
 var modals = document.getElementsByClassName("modal");
 
@@ -59,9 +61,10 @@ for(let i= 0; i <spans.length; i ++) {
 
 
 
-// Add counter for newly added ingredients. The reason is such a 
-//high number is to avoid the same id's between other recipes ingredients
-//in the same page. 
+// Add counter for newly added ingredients. The reason for such a 
+//high number is to avoid the same id's between other ingredients
+//in the same page. It should be incresed if we will have more 
+// ingredients in the database
 
 let counter = 200;
 
